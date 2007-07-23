@@ -17,9 +17,6 @@ ExclusiveArch:	%{ix86}
 # ExclusiveArch:	%{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_sbindir		/sbin
-%define		_libdir			/%{_lib}/%{name}
-
 %description
 cli is the abbreviation of Promise Technology, Inc FastTrak serial
 product utilities. It contains RAID API, command line utilities. RAID
@@ -40,23 +37,23 @@ rpm2cpio *.rpm | cpio -i -d
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_libdir}/%{name}}
 
 install -d fixed-lib
 for l in usr/lib/*6.so; do
 	install $l fixed-lib/$(basename $l 6.so).so
 done
-install usr/sbin/cli $RPM_BUILD_ROOT%{_libdir}
-install fixed-lib/*.so $RPM_BUILD_ROOT%{_libdir}
+install usr/sbin/cli $RPM_BUILD_ROOT%{_libdir}/%{name}
+install fixed-lib/*.so $RPM_BUILD_ROOT%{_libdir}/%{name}
 
-sed -i -e 's#1>&# > #g' $RPM_BUILD_ROOT%{_libdir}/libpri2plugin.so
+sed -i -e 's#1>&# > #g' $RPM_BUILD_ROOT%{_libdir}/%{name}/libpri2plugin.so
 
 cat << 'EOF' >  $RPM_BUILD_ROOT%{_sbindir}/promise-i2cli
 #!/bin/sh
-LD_LIBRARY_PATH=%{_libdir}:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=%{_libdir}/%{name}:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
 cd /tmp 2> /dev/null
-exec %{_libdir}/cli $*
+exec %{_libdir}/%{name}/cli $*
 EOF
 
 %clean
@@ -69,6 +66,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc usr/share/doc/*/*
 %attr(755,root,root) %{_sbindir}/*
-%dir %{_libdir}
-%attr(755,root,root) %{_libdir}/cli
-%attr(755,root,root) %{_libdir}/*.so
+%dir %{_libdir}/%{name}
+%attr(755,root,root) %{_libdir}/%{name}/cli
+%attr(755,root,root) %{_libdir}/%{name}/*.so
