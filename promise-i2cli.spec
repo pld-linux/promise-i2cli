@@ -1,27 +1,35 @@
 %define	no_install_post_chrpath	1
 Summary:	Promise I2 CLI
+Summary(pl.UTF-8):	Narzędzia CLI dla kontrolerów Promise I2
 Name:		promise-i2cli
 Version:	2.5.0.25
 Release:	1
 License:	distributable
-Group:		Base
+Group:		Applications/System
 Source0:	http://www.promise.com/upload/Support/Utility/Linux_32bits.rar
 # Source0-md5:	7e8c9c33d7023e3405c4c8e5dcc480ed
 Source1:	http://www.promise.com/upload/Support/Utility/Linux_64bits.rar
 # Source1-md5:	68a724fd535672c525d36aecda698a0f
 URL:		http://domsch.com/linux/
 BuildRequires:	rpm-utils
+BuildRequires:	sed >= 4.0
 BuildRequires:	unrar
 ExclusiveArch:	%{ix86}
 # this is lie so far since binaries are 32bit only even in Linux_64bits.rar
-# ExclusiveArch:	%{x8664}
+# ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-cli is the abbreviation of Promise Technology, Inc FastTrak serial
+cli is the abbreviation of Promise Technology, Inc. FastTrak serial
 product utilities. It contains RAID API, command line utilities. RAID
-API is the application pr ogramming interface with FastTrak serial
+API is the application programming interface with FastTrak serial
 driver.
+
+%description -l pl.UTF-8
+cli to skrót od narzędzi dla kontrolerów szeregowych FastTrak firmy
+Promise Technology, Inc. Zawiera RAID API i narzędzia linii poleceń.
+RAID API to interfejs programistyczny dla sterownika szeregowego
+FastTrak.
 
 %prep
 %setup -q -c -T
@@ -59,8 +67,8 @@ EOF
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
