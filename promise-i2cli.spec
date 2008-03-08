@@ -58,7 +58,7 @@ sed -i -e 's#1>&# > #g' $RPM_BUILD_ROOT%{_libdir}/%{name}/libpri2plugin.so
 
 cat << 'EOF' >  $RPM_BUILD_ROOT%{_sbindir}/promise-i2cli
 #!/bin/sh
-LD_LIBRARY_PATH=%{_libdir}/%{name}:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=%{_libdir}/%{name}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export LD_LIBRARY_PATH
 cd /tmp 2> /dev/null
 exec %{_libdir}/%{name}/cli $*
